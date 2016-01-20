@@ -1,0 +1,237 @@
+Enter file contents here
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+
+public class CommonUtilityFunctions {
+	
+	private static PrintWriter writer;
+	private static int StepNumber = 1;
+	
+	public static String CreateResultFolder (String ResultrootFolder,String FolderName) throws IOException {
+		//String ResultFolder = "Test";
+		File dir = new File("Results\\" + ResultrootFolder + "\\" + FolderName );
+        dir.mkdir();
+        return FolderName;
+		
+	  }
+	
+	public static String CreateResultrootFolder (String FolderName) throws IOException {
+		//String ResultFolder = "Test";
+		File dir = new File( "Results\\" + FolderName );
+        dir.mkdir();
+        return FolderName;
+		
+	  }
+	
+	public static void CreateHTMLResult(String FileName, String ExecutionTime, String ExecutionDate, String TestCaseName) throws IOException {
+		File file = new File(FileName);
+    	file.createNewFile();
+    	file.canWrite();
+	    writer = new PrintWriter(FileName, "UTF-8");
+	    writer.println("<script type='text/javascript'>");
+		writer.println("	function toggle_visibility(tbid,lnkid){");
+		writer.println("	 if(document.all)");
+		writer.println("		{document.getElementById(tbid).style.display = document.getElementById(tbid).style.display == 'block' ? 'none' : 'block';}");
+		writer.println("	 else");
+		writer.println("		{document.getElementById(tbid).style.display = document.getElementById(tbid).style.display == 'table' ? 'none' : 'table';}");
+		writer.println("	  	document.getElementById(lnkid).value = document.getElementById(lnkid).value == '[-] Collapse' ? '[+] Expand' : '[-] Collapse'; }");
+		writer.println("</script>");
+		writer.println("<style type='text/css'>");
+		writer.println(".heading {font-family: Franklin Gothic Medium ; font-style: bold; color: White; font-size: 17pt; background-color: #2B547E;} ");
+		writer.println(".Title { font-family: Franklin Gothic Medium ; color:purple;  font-size: 8pt;}");
+		writer.println(".subheading {BORDER: #8eb3d8 2px solid;FONT-SIZE: 11pt;COLOR: white;FONT-FAMILY: Franklin Gothic Medium;text-align: center;BACKGROUND-COLOR :  #319AFD;}");
+		writer.println(".subheading1{BORDER: #8eb3d8 1px solid;FONT-SIZE: 10pt;COLOR: #3366FF;FONT-FAMILY:Franklin Gothic Medium;text-align: center;HEIGHT: 20px;}") ;
+		writer.println(".subheading2{FONT-SIZE: 12pt;FONT-WEIGHT: bold;COLOR:#3B3131;FONT-FAMILY: Franklin Gothic Medium;BACKGROUND-COLOR:White;}");
+		writer.println(".border{BORDER: #8eb3d8 1px solid;FONT-SIZE: 10pt;COLOR:#34282C;FONT-WEIGHT: bold;FONT-FAMILY:Calibri;}");
+		writer.println(".alt {background-color:#E1EEF4}");
+		writer.println(".border_Pass{BORDER: #8eb3d8 1px solid;FONT-SIZE: 9pt;COLOR:Green;BACKGROUND-COLOR:White;FONT-FAMILY:Franklin Gothic Medium;}");
+		writer.println(".border_Fail{BORDER: #8eb3d8 1px solid;COLOR: Red;FONT-SIZE: 9pt;BACKGROUND-COLOR:white;FONT-FAMILY:Franklin Gothic Medium;}");
+		writer.println(".border_Done{BORDER: #8eb3d8 1px solid;FONT-SIZE: 9pt;COLOR: #0000FF;FONT-FAMILY: Franklin Gothic Medium;}");
+		writer.println(".border_Warning{BORDER: #8eb3d8 1px solid;FONT-SIZE:9pt;COLOR: Maroon;FONT-FAMILY: Franklin Gothic Medium;}");
+		writer.println(".border_Fail_Final{BORDER: #8eb3d8 1px solid;COLOR:  #0000FF; font-style: bold;FONT-SIZE: 9pt;BACKGROUND-COLOR: #F9966B;FONT-FAMILY: Franklin Gothic Medium;}");	 
+		writer.println(".border_Pass_Final{BORDER: #8eb3d8 1px solid;COLOR:  #0000FF; font-style: bold;FONT-SIZE: 9pt;BACKGROUND-COLOR: #B5EAAA;FONT-FAMILY:Franklin Gothic Medium;}");
+		writer.println("strong{COLOR:#3366FF;FONT-FAMILY: Franklin Gothic Medium}");
+		writer.println("#tbl1,#tbl2,#tbl3,#tbl4,#tbl5,#tbl6,#tbl7,#tbl8,#tbl9,#tbl10,#tbl11,#tbl12,#tbl13,#tbl14,#tbl15  {display:none;}");
+		writer.println("#lnk1,#lnk2,#lnk3,#lnk4,#lnk5,#lnk6,#lnk7,#lnk8,#lnk9,#lnk10,#lnk11,#lnk12,#lnk13,#lnk14,#lnk15 {border:none;background:none;width:85px;}");
+		writer.println("</style>");
+		writer.println("<head>");
+		writer.println("	<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1' />");
+		writer.println("		<title>Detail Report</title>");
+		writer.println("</head>");
+		writer.println("<body>");
+		writer.println("");
+		writer.println("<table>");
+		//writer.println("<tr><td width =100% class= Title align =left > Detail Report<br> </td></td></tr>");
+		writer.println("<br></table>");
+		writer.println("<table width = 100% border=2 BORDERCOLOR= #0066CC cellpadding=0 > ");
+		writer.println("<tr>");
+		writer.println("<td class= heading align= center > " + "DetailedReport" + " : " + TestCaseName + "</td> ");
+		writer.println("</tr>");
+		writer.println("</table><br>");
+		writer.println("<table align='center' width = 100%>");
+		writer.println("<tr>");
+		writer.println("	<td class='subheading1'>Execution Start Time : " + ExecutionTime + " </td>");
+		//writer.println("	<td class='subheading1'>Executed By : " + "strUserName" + " </td>");
+		writer.println("	<td class='subheading1'>Execution Date  : " + ExecutionDate + "</td>");
+		writer.println("</tr>");
+		writer.println("</table><br>");
+		writer.println("");
+		////////////////////////////////////////////////////////////////////////////////////////////
+		writer.println("<table width:100% bgcolor='#EEEEEE' cellspacing =0 >");
+		writer.println ("	<tr><td bgcolor='#8eb3d8' colspan='3'></td></tr>");
+		writer.println ("	<tr>");
+		//writer.println ("<td width= '70%' bgcolor='#FFDFDD' align ='left'> <strong> Test Case : "+ "testCaseName" +  "&nbsp [ Iteration : #" + "iterationNo" + " ]</strong> </td>");
+		//writer.println ("	<td width= '30%' bgcolor='#FFDFDD' align ='center'> </td>");
+		//writer.println ("	<td  width= '20%' bgcolor='#C2DFFF' align='right' ><input id='lnk" + "iHTMLTableLink" + "' type='button' value='[+] Expand' onclick=" + "iHTMLTableLink"  + "','lnk" + "iHTMLTableLink" +"')></td>");
+		writer.println ("	</tr>");
+		writer.println ("	<tr><td bgcolor='#8eb3d8' colspan='3'></td></tr>	");
+		writer.println ("	</table>");
+		writer.println ("<table style='word-wrap:break-word;table-layout: fixed'; width=100% id='tbl"+ "iHTMLTableLink" +"' cellspacing=0>" )	;
+		writer.println ("	<tr>");
+		writer.println ("<td class='subheading'>Step Number</td>");
+		writer.println ("<td class='subheading'>Step Descrption</td>");
+        writer.println ("<td class='subheading'>Expected Result</td>");
+		writer.println ("<td class='subheading'>Actual Result</td>");
+		writer.println ("<td class='subheading'>Result</td>");
+		writer.println ("<td class='subheading'>Screenshot</td>")	;				
+		writer.close();
+		StepNumber = 1;
+	}
+	
+public static void writeReportFail(String StepDecsription,String ExpectedResult,String ActualResult,String Screenshot,String FileName) throws IOException {
+		String ResultFile = FileName + "\\Results.html";
+		FileWriter fstream = new FileWriter(ResultFile,true);
+        BufferedWriter fbw = new BufferedWriter(fstream);
+        fbw.write("<tr>");
+        fbw.write("<td class= 'border'>" +  StepNumber + "</td>");
+        fbw.write("<td class= 'border'>" + StepDecsription + "</td>");
+        fbw.write("<td class= 'border'>" + ExpectedResult + "</td>");
+        fbw.write("<td class= 'border'>" + ActualResult + "</td>");
+        fbw.write("<td class= 'border_Fail'>Fail</td>");
+        fbw.write("<td class='border'><a href='" + Screenshot + "'>Screenshot</a></td>");
+        fbw.write("</tr>");
+        StepNumber = StepNumber + 1;
+        
+        fbw.newLine();
+        fbw.close();
+	}
+
+public static void writeReportPass(String StepDecsription,String ExpectedResult,String ActualResult,String Screenshot,String FileName) throws IOException {
+	String ResultFile = FileName + "\\Results.html";
+	FileWriter fstream = new FileWriter(ResultFile,true);
+    BufferedWriter fbw = new BufferedWriter(fstream);
+    fbw.write("<tr>");
+    fbw.write("<td class= 'border'>" +  StepNumber + "</td>");
+    fbw.write("<td class= 'border'>" + StepDecsription + "</td>");
+    fbw.write("<td class= 'border'>" + ExpectedResult + "</td>");
+    fbw.write("<td class= 'border'>" + ActualResult + "</td>");
+    fbw.write("<td class= 'border_Pass'>Pass</td>");
+    fbw.write("<td class='border'><a href='" + Screenshot + "'>Screenshot</a></td>");
+    fbw.write("</tr>");
+    fbw.newLine();
+    fbw.close();
+    StepNumber = StepNumber + 1;
+}
+	
+	public static void UpdateHTMLResult(String FileName) throws IOException {
+		
+		FileWriter fstream = new FileWriter(FileName,true);
+        BufferedWriter fbw = new BufferedWriter(fstream);
+        fbw.write("<tr>");
+        fbw.write("<td class= 'border'>1</td>");
+        fbw.write("<td class= 'border'>Vikas</td>");
+        fbw.write("<td class='border_Pass'>PASS</td>");
+        fbw.write("<td class= 'border'>inputParameter</td>");
+        fbw.write("<td class= 'border'>outputParameter</td>");
+        fbw.write("<td class='border_Pass'>Test Passed</td>");
+        fbw.write("<td class='border'>10 Second(s)</td>");
+        fbw.write("</tr>");
+        
+        
+        fbw.newLine();
+        fbw.close();
+	}
+	
+
+	
+	public static String takeScreenshot(WebDriver driver,String ResultFolder,String FileName) throws IOException {
+	    File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+    	FileUtils.copyFile(scrFile, new File(ResultFolder + "\\" + FileName + ".png"));
+    	return FileName + ".png";
+	}
+	
+	public static String getParameterFromInputSheet (String SheetName, String ColumnName, int rownum) throws IOException {
+		int column = 0;
+		if(ColumnName.equals("TestCaseName")  || ColumnName.equals("userName")){
+			column = 0;
+		}
+		else if(ColumnName.equals("TobeExecuted") || ColumnName.equals("AnswerCenterTitle1") || ColumnName.equals("passWord")){
+			column = 1;
+		}
+		else if(ColumnName.equals("Browser") || ColumnName.equals("AnswerCenterTitle2") || ColumnName.equals("URL")){
+			column = 2;
+		}
+		else if(ColumnName.equals("makeRecommendtext")  || ColumnName.equals("impersonationId") || ColumnName.equals("ReportDownloadFolder")){
+			column = 3;
+		}
+		else if(ColumnName.equals("reviewRecommendtext") || ColumnName.equals("Team Name") || ColumnName.equals("commDecisiontext")){
+			column = 4;
+		}
+		else if( ColumnName.equals("PeopleLeaderID")){
+			column = 5;
+		}
+		else if( ColumnName.equals("SearchText")){
+			column = 6;
+		}
+		else if( ColumnName.equals("SearchTextFullName")){
+			column = 7;
+		}
+		else if( ColumnName.equals("ErrorText")){
+			column = 8;
+		}
+		else if( ColumnName.equals("ReportInputParameter1")){
+			column = 9;
+		}
+		else if( ColumnName.equals("ReportInputParameter2")){
+			column = 10;
+		}
+		else if( ColumnName.equals("ReportOutputFormat")){
+			column = 11;
+		}
+
+		
+		FileInputStream ExcelFile = new FileInputStream("Data/Data.xlsx");
+    	XSSFWorkbook ExcelWBook = new XSSFWorkbook(ExcelFile);
+    	XSSFSheet ExcelWSheet = ExcelWBook.getSheet(SheetName);
+     	XSSFCell Cell = ExcelWSheet.getRow(rownum).getCell(column);
+        String Celldata = Cell.getStringCellValue();
+        if(Celldata.equals(null)){
+        	Celldata = "No Data is provided";
+        }
+    	//System.out.println(Celldata);
+        return Celldata;
+		
+	  }
+	
+	public static Integer getRowCountFromSheet (String SheetName) throws IOException {
+		FileInputStream ExcelFile = new FileInputStream("Data/Data.xlsx");
+    	XSSFWorkbook ExcelWBook = new XSSFWorkbook(ExcelFile);
+    	XSSFSheet ExcelWSheet = ExcelWBook.getSheet(SheetName);
+     	//XSSFCell Cell = ExcelWSheet.getRow(1).getCell(0);
+     	return ExcelWSheet.getPhysicalNumberOfRows(); 
+    }
+	
+
+}
