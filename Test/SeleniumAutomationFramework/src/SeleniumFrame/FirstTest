@@ -1,0 +1,17 @@
+Enter file contenimport org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+
+public class InvisionLoginTest {
+	
+public static void run(WebDriver driver,String ResultFolder,int Rownum) throws Exception{
+		
+		driver.get("http://www.invisionapp.com/");
+		driver.findElement(By.xpath("//a[@class='fancybox-item fancybox-close']")).click();
+		
+		driver.close();
+		
+	}
+
+}
+ts here
