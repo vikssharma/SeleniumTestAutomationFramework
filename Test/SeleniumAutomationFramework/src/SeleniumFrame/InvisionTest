@@ -1,0 +1,76 @@
+Enter file contents hereimport java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+
+public class Test {
+	
+	public static void main(String[] args) throws Exception {
+		
+		Platform current = Platform.getCurrent();
+	    System.out.println(current);
+	    //WebDriver driver = new SafariDriver();
+	    
+	    System.setProperty("webdriver.ie.driver", "C:\\ChromeDriver\\chromedriver.exe");
+		//DesiredCapabilities cap = DesiredCapabilities.internetExplorer();
+		//cap.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+		WebDriver driver = new ChromeDriver();
+		driver.get("http://www.google.com");
+		Integer TestSuiteCount = CommonUtilityFunctions.getRowCountFromSheet("TestSuite");
+		
+		Date date = new Date();
+    	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    	SimpleDateFormat sdftime = new SimpleDateFormat(" h:mm:ss a");
+    	String formattedDate = sdf.format(date);
+    	String ExecutionTime = sdftime.format(date);
+    	String currentDate = formattedDate.replace("/", ".");
+		String currentTime = (ExecutionTime.replace(":", ".")).replace(" ", "_");
+		
+				
+		for (int i=1;i<TestSuiteCount;i++)
+		{
+			String TestCaseName = CommonUtilityFunctions.getParameterFromInputSheet("TestSuite", "TestCaseName", i);
+			
+			String TobeExecuted = CommonUtilityFunctions.getParameterFromInputSheet("TestSuite", "TobeExecuted", i);
+			if(TobeExecuted.equals("Y"))
+			{
+				/*
+				if(CommonUtilityFunctions.getParameterFromInputSheet("TestSuite", "Browser", i).equals("Chrome"))
+				{
+					driver = Chromedriver;
+				}
+				else
+				{
+					driver = IEdriver;
+				}
+				*/
+				String ResultrootFolder = "Result_" + currentDate + currentTime;
+				CommonUtilityFunctions.CreateResultrootFolder(ResultrootFolder);
+				
+				String ResultFolder = "Result_" + TestCaseName + currentDate + currentTime;
+				CommonUtilityFunctions.CreateResultFolder(ResultrootFolder,ResultFolder);
+				CommonUtilityFunctions.CreateHTMLResult("Results\\" + ResultrootFolder + "\\" +ResultFolder + "\\Results.html",ExecutionTime,formattedDate,TestCaseName);
+				String ResultFilefolder = "Results\\" + ResultrootFolder + "\\" +ResultFolder;
+				
+				if(TestCaseName.equals("InvisionLoginTest"))
+				{
+					
+					InvisionLoginTest.run(driver, ResultFilefolder,i);
+				}
+			
+			
+			}
+			
+			
+	    
+	}
+		
+
+
+	}
+}
