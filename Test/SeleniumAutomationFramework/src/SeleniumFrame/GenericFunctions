@@ -1,0 +1,266 @@
+Enter file contents hereimport java.util.Calendar;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+
+
+
+public class GenericFunctions {
+	
+	public static String test_step_unique_id;
+	public static WebElement finalElement;
+	
+	public static boolean isDisplayed(WebElement locator_Property,WebDriver driver,String folder,String description) throws Exception{
+		boolean returnStatus= false;
+		
+		
+		
+		if(!description.equals("")&& locator_Property!= null){
+		try{
+		boolean returnStatusNew= false;	
+		if(locator_Property.isDisplayed()){
+			returnStatusNew = true;
+			JavascriptExecutor js = (JavascriptExecutor) driver; 
+			js.executeScript("arguments[0].scrollIntoView();", locator_Property);
+			Thread.sleep(1000);
+			js.executeScript("arguments[0].setAttribute('style', arguments[1]);", locator_Property, "border: 3px solid red;");
+			test_step_unique_id=CommonUtilityFunctions.takeScreenshot(driver,folder,description);
+			js.executeScript("arguments[0].setAttribute('style', arguments[1]);", locator_Property, "border:'';");
+			CommonUtilityFunctions.writeReportPass("Validate whether "+description+" is displayed in the Application", description+ " should be displayed in the page", description+ " is displayed in the page", test_step_unique_id, folder);
+		}
+		returnStatus = returnStatusNew;
+		}catch(Exception e){
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder,description);
+			CommonUtilityFunctions.writeReportFail("Validate whether "+description+" is displayed in the Application", description+ " should be displayed in the page", description+ " is not displayed in the page", test_step_unique_id, folder);
+		}
+		}else{
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder,description);
+			CommonUtilityFunctions.writeReportFail("Validate whether "+description+" is displayed in the Application", description+ " should be displayed in the page", description+ " is not displayed in the page", test_step_unique_id, folder);
+		}
+		return returnStatus;			
+	}
+	
+	public static boolean notDisplayed(WebElement locator_Property,WebDriver driver,String folder,String description) throws Exception{
+		boolean returnStatus= false;
+		if(!description.equals("")&& locator_Property!= null){
+		try{
+		boolean returnStatusNew= false;	
+		if(locator_Property.isDisplayed()){
+			returnStatusNew = true;
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder, description);
+			CommonUtilityFunctions.writeReportFail("Validate whether "+description+" is not displayed in the Application", description+ " should not be displayed in the page", description+ " is displayed in the page", test_step_unique_id, folder);
+			returnStatus = returnStatusNew;
+		}else{
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder, description);
+			CommonUtilityFunctions.writeReportPass("Validate whether "+description+" is not displayed in the Application", description+ " should not be displayed in the page", description+ " is not displayed in the page", test_step_unique_id, folder);
+		}			
+		}catch(Exception e){
+			//Utilities.appendToFile(e);
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder, description);
+			CommonUtilityFunctions.writeReportPass("Validate whether "+description+" is not displayed in the Application", description+ " should not be displayed in the page", description+ " is not displayed in the page", test_step_unique_id, folder);
+		}
+		}else{
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder, description);
+			CommonUtilityFunctions.writeReportPass("Validate whether "+description+" is not displayed in the Application", description+ " should not be displayed in the page", description+ " is not displayed in the page", test_step_unique_id, folder);
+		}
+		return returnStatus;			
+	}
+	
+	public static boolean EnterValues(String enterDetails,WebElement locator_Property,WebDriver driver,String folder,String description) throws Exception{
+		boolean returnStatus= false;
+		try{
+		boolean returnStatusNew= false;	
+		if(locator_Property.isDisplayed()){
+			returnStatus = true;
+			locator_Property.clear();
+			locator_Property.sendKeys(enterDetails);
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder,description);
+			CommonUtilityFunctions.writeReportPass("Enter Text", "Text should be entered in the field.", "Text is entered in the field.", test_step_unique_id, folder);
+		}
+		returnStatus = returnStatusNew;
+		}catch(Exception e){
+			//Utilities.appendToFile(e);
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder,description);
+			CommonUtilityFunctions.writeReportFail("Validate whether "+description+" is displayed in the Application", description+ " should be displayed in the page", description+ " is not displayed in the page", test_step_unique_id, folder);
+		}			
+		return returnStatus;			
+	}
+	
+	public static boolean advancedClick(WebElement locator_Property,WebDriver driver,String folder) throws Exception{
+		boolean returnStatus= false;
+		try{
+		boolean returnStatusNew= false;	
+		if(locator_Property.isDisplayed()){
+			returnStatus = true;
+			try{
+				locator_Property.click();
+			}catch(Exception ex){
+				JavascriptExecutor executor = (JavascriptExecutor)driver;
+				executor.executeScript("arguments[0].click();", locator_Property);
+			}
+			
+			Thread.sleep(3000);
+		}
+		returnStatus = returnStatusNew;
+		}catch(Exception e){
+			//Utilities.appendToFile(e);
+			System.out.println(e);
+		}
+		
+		return returnStatus;			
+	}
+	
+	public static boolean VerifyTextDisplayed(WebElement locator_Property,WebDriver driver,String folder,String textToBeVerified) throws Exception {
+		boolean returnStatus= false;
+		try{
+		boolean returnStatusNew= false;	
+		if(locator_Property.getText().equals(textToBeVerified)){
+			returnStatus = true;
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder,textToBeVerified);
+			CommonUtilityFunctions.writeReportPass("Validate whether "+textToBeVerified+" is displayed in the Application", textToBeVerified+ " should be displayed in the page", textToBeVerified+ " is displayed in the page", test_step_unique_id, folder);
+		}
+		returnStatus = returnStatusNew;
+		}catch(Exception e){
+			//currentsuit.appendToFile(e);
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder,textToBeVerified);
+			CommonUtilityFunctions.writeReportFail("Validate whether "+textToBeVerified+" is displayed in the Application", textToBeVerified+ " should be displayed in the page", textToBeVerified+ " is not displayed in the page", test_step_unique_id, folder);
+		}
+		
+		return returnStatus;	
+	}
+	
+	public static boolean LoadApplication(String URL,WebDriver driver,String verifyElement,int timeOut,String folder,String description) throws Exception{
+		boolean loginStatus= false;
+		
+		
+		driver.get(URL);
+		waitForLoad(driver, timeOut);			
+		loginStatus = waitUntilConditionPresent(driver, verifyElement, timeOut);
+		if(!loginStatus){
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder,description);
+			CommonUtilityFunctions.writeReportFail("Loading the URL", "Page should be loaded successfully.", "Page is not loaded", test_step_unique_id,folder);
+		}else{
+			test_step_unique_id = CommonUtilityFunctions.takeScreenshot(driver, folder,description);
+			CommonUtilityFunctions.writeReportPass("Loading the URL", "Page should be loaded successfully.", "Page loaded successfully.", test_step_unique_id,folder);
+		}
+		
+		return loginStatus;			
+	}	
+
+	
+	public static void waitForLoad(WebDriver driver,int time) {
+		boolean status = false;
+		Calendar startTime = Calendar.getInstance();
+		Calendar endTime = Calendar.getInstance();
+		long timeTaken;
+	    ExpectedCondition<Boolean> pageLoadCondition = new
+	        ExpectedCondition<Boolean>() {
+	            public Boolean apply(WebDriver driver) {
+	                return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+	            }
+	        };
+	    WebDriverWait wait = new WebDriverWait(driver, time);
+	    do {
+	    	
+			try {
+				wait.until(pageLoadCondition);
+				if(wait.until(pageLoadCondition)==true){	
+					status = true;
+				}else{
+					status = false;
+				}
+				} catch (NoSuchElementException e) {
+					status = false;
+				}
+				endTime = Calendar.getInstance();
+				timeTaken = (endTime.getTimeInMillis() - startTime.getTimeInMillis()) / 1000;
+				if (timeTaken > time){
+					timeTaken = timeTaken-time;	
+					startTime = Calendar.getInstance();
+				}
+		} while(status == false && timeTaken <= time);		   		   
+	}
+	
+	public static boolean waitUntilConditionPresent(WebDriver driver,String el,int timeOut) throws InterruptedException
+	{
+		boolean status = false;
+		Calendar startTime = Calendar.getInstance();
+		Calendar endTime = Calendar.getInstance();
+		long timeTaken;
+		do {
+			try {
+				WebElement expected_ID = RetrieveWebElementFromApplication(el, el, el,driver);
+				if(expected_ID!=null){				
+				status = true;
+				}
+			} catch (NoSuchElementException e) {
+				status = false;
+			}
+			endTime = Calendar.getInstance();
+			timeTaken = (endTime.getTimeInMillis() - startTime
+					.getTimeInMillis()) / 1000;
+	
+		} while (status == false && timeTaken <= timeOut);
+		if (timeTaken > timeOut) {
+			Thread.sleep(1000);
+		}
+		return status;
+	}
+	
+	public static WebElement RetrieveWebElementFromApplication(String locateID,String locateCSS,String locateXPath,WebDriver driver){	
+		finalElement = null;
+		if(ElementLocatorVerification(By.id(locateID),driver)){
+			finalElement = driver.findElement(By.id(locateID));	
+		}else if(ElementLocatorVerification(By.cssSelector(locateCSS),driver)){
+			finalElement = driver.findElement(By.cssSelector(locateCSS));
+		}else if(ElementLocatorVerification(By.xpath(locateXPath),driver)){
+			finalElement = driver.findElement(By.xpath(locateXPath));
+		}
+		return finalElement;
+	}
+	
+	public static boolean ElementLocatorVerification(By by, WebDriver driver) {
+		try {
+			if (driver.findElement(by) != null){
+				return true;
+			}
+			else{
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	  }
+	
+	 public static boolean waitUntilXpath(String XPATH,WebDriver driver) throws InterruptedException
+	 {
+		 boolean status=false;
+	 boolean WaitStatus1= true;
+	  while(WaitStatus1)
+	  {
+		try
+		{
+		 String GetText1 = "return arguments[0].innerText";
+		 String Actual1=(String) ((JavascriptExecutor) driver).executeScript(GetText1,driver.findElement(By.xpath(XPATH)));
+		 System.out.println("Actual1"+Actual1);
+		 if(Actual1.equals("null"))
+		 {Thread.sleep(100);
+			 continue;
+		 }
+		 System.out.println("done");
+		 status=true;
+		 WaitStatus1=false;
+		 }
+		catch(Exception e){Thread.sleep(100);continue;}
+	  }
+	  return status;
+	 }
+	 
+	 
+}
